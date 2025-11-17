@@ -3,13 +3,16 @@ package com.pubito.pubito_backend.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "users")
-public class Users {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,67 +34,17 @@ public class Users {
     private boolean isActive = true;
 
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Reviews> reviwes = new HashSet<>();
+    private Set<Review> reviwes = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "roles_users", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Roles> roles = new HashSet<>();
+    private Set<Role> roles = new HashSet<>();
 
-    public Users(){}
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public @Email @NotBlank String getEmail() {
-        return email;
-    }
-
-    public void setEmail(@Email @NotBlank String email) {
-        this.email = email;
-    }
-
-    public @NotBlank String getPassword() {
-        return password;
-    }
-
-    public void setPassword(@NotBlank String password) {
-        this.password = password;
-    }
-
-    public @NotBlank String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(@NotBlank String nickname) {
-        this.nickname = nickname;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
-    }
-
-    public Set<Reviews> getReviwes() {
-        return reviwes;
-    }
-
-    public void setReviwes(Set<Reviews> reviwes) {
-        this.reviwes = reviwes;
-    }
-
-    public Set<Roles> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Roles> roles) {
-        this.roles = roles;
+    @PrePersist
+    public void prePersist() {
+        createdAt = LocalDateTime.now();
     }
 }
