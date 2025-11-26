@@ -1,12 +1,14 @@
 package com.pubito.pubito_backend.entities;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Builder
 @Data
 @Entity
 @Table(name = "bars")

@@ -33,7 +33,7 @@ public class User {
 
     private boolean isActive = true;
 
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Review> reviwes = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
