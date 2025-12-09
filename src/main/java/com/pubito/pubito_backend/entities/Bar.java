@@ -1,15 +1,17 @@
 package com.pubito.pubito_backend.entities;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Builder
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "bars")
 public class Bar {
@@ -24,12 +26,10 @@ public class Bar {
     @Column(columnDefinition = "TEXT", nullable = true)
     private String description;
 
-
     private double avgRate;
 
     @OneToMany(mappedBy = "bar", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Menu> menu = new ArrayList<>();
-
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id")

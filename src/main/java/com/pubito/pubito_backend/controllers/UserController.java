@@ -3,19 +3,23 @@ package com.pubito.pubito_backend.controllers;
 import com.pubito.pubito_backend.dto.user.UserRegisterRequestDTO;
 import com.pubito.pubito_backend.dto.user.UserResponseDTO;
 import com.pubito.pubito_backend.dto.user.UserUpdateRequestDTO;
+import com.pubito.pubito_backend.services.review.ReviewService;
 import com.pubito.pubito_backend.services.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Validated
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
+    private final ReviewService reviewService;
 
     @PostMapping
     public ResponseEntity<UserResponseDTO> createUser (@RequestBody UserRegisterRequestDTO dto){
@@ -41,5 +45,37 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id){
         userService.deleteUserByID(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{userId}/reviews/count")
+    public ResponseEntity<Long> getReviewsCountForUser(@PathVariable Long userId){
+        Long count = reviewService.countByUserId(userId);
+        return ResponseEntity.ok(count);
+    }
+
+    @PostMapping("/{userId}/roles/{roleName}")
+    public ResponseEntity<Void> addRoleToUser(@PathVariable Long userId,
+                                              @PathVariable String roleName) {
+        userService.addRoleToUser(userId, roleName);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{userId}/roles/{roleName}")
+    public ResponseEntity<Void> removeRoleFromUser(@PathVariable Long userId,
+                                                   @PathVariable String roleName) {
+        userService.removeRoleFromUser(userId, roleName);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/block")
+    public ResponseEntity<UserResponseDTO> blockUser(@PathVariable Long id){
+        userService.blockUser(id);
+        return ResponseEntity.ok(userService.blockUser(id));
+    }
+
+    @PatchMapping("/{id}/unblock")
+    public ResponseEntity<UserResponseDTO> unblockUser(@PathVariable Long id){
+        userService.unblockUser(id);
+        return ResponseEntity.ok(userService.unblockUser(id));
     }
 }

@@ -3,7 +3,10 @@ package com.pubito.pubito_backend.controllers;
 import com.pubito.pubito_backend.dto.bar.BarCreateRequestDTO;
 import com.pubito.pubito_backend.dto.bar.BarResponseDTO;
 import com.pubito.pubito_backend.dto.bar.BarUpdateRequestDTO;
+import com.pubito.pubito_backend.dto.menu.MenuResponseDTO;
 import com.pubito.pubito_backend.services.bar.BarService;
+import com.pubito.pubito_backend.services.menu.MenuService;
+import com.pubito.pubito_backend.services.review.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/bars")
+@RequestMapping("/bars")
 @RequiredArgsConstructor
 public class BarController {
 
     private final BarService barService;
+    private final ReviewService reviewService;
+    private final MenuService menuService;
 
     @PostMapping
     public ResponseEntity<BarResponseDTO> createBar(@RequestBody BarCreateRequestDTO dto){
@@ -42,5 +47,17 @@ public class BarController {
         barService.deleteBarById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{barId}/reviews/count")
+    public ResponseEntity<Long> getReviewsCountForBar(@PathVariable Long barId){
+        Long count = reviewService.countByBarId(barId);
+        return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/{barId}/cheapest")
+    public ResponseEntity<List<MenuResponseDTO>> getTop3Cheapest(@PathVariable Long barId){
+        return ResponseEntity.ok(menuService.getTop3CheapestByBarId(barId));
+    }
+
 
 }

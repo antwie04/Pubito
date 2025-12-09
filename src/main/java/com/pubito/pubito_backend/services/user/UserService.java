@@ -18,4 +18,12 @@ public interface UserService {
 
     UserResponseDTO updateUser(Long id, UserUpdateRequestDTO userDTO);
 
+    void addRoleToUser(Long userId, String roleName);
+
+    void removeRoleFromUser(Long userId, String roleName);
+
+    UserResponseDTO blockUser(Long userId);
+
+    UserResponseDTO unblockUser(Long userId);
+
 }

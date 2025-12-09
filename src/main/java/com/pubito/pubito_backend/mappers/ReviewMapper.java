@@ -1,31 +1,27 @@
 package com.pubito.pubito_backend.mappers;
 
-import com.pubito.pubito_backend.dto.review.ReviewCreateRequestDTO;
 import com.pubito.pubito_backend.dto.review.ReviewResponseDTO;
-import com.pubito.pubito_backend.dto.review.ReviewUpdateRequestDTO;
-import com.pubito.pubito_backend.entities.Bar;
 import com.pubito.pubito_backend.entities.Review;
-import com.pubito.pubito_backend.entities.User;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface ReviewMapper {
+@Component
+public class ReviewMapper {
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "bar", source = "bar")
-    @Mapping(target = "user", source = "user")
-    @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
-    Review toEntity(ReviewCreateRequestDTO dto, Bar bar, User user);
+    public ReviewResponseDTO toDTO(Review review) {
+        if (review == null) {
+            return null;
+        }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "bar", ignore = true)
-    @Mapping(target = "user", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    void updateEntity(@MappingTarget Review review, ReviewUpdateRequestDTO dto);
+        Long barId  = review.getBar()  != null ? review.getBar().getId()  : null;
+        Long userId = review.getUser() != null ? review.getUser().getId() : null;
 
-    @Mapping(target = "barId", source = "bar.id")
-    @Mapping(target = "userId", source = "user.id")
-    ReviewResponseDTO toDTO(Review review);
+        return new ReviewResponseDTO(
+                review.getId(),
+                review.getRate(),
+                review.getContent(),
+                barId,
+                userId,
+                review.getCreatedAt()
+        );
+    }
 }
