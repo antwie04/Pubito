@@ -49,7 +49,6 @@ public class CompanyDetailsController {
         CompanyDetailsResponseDTO response = companyDetailsService.updateCompanyDetails(id, dto);
         return ResponseEntity.ok(response);
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCompanyDetails(@PathVariable Long id) {
         companyDetailsService.deleteCompanyDetailsById(id);
