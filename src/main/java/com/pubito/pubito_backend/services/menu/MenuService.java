@@ -19,5 +19,7 @@ public interface MenuService {
 
     List<MenuResponseDTO> getTop3CheapestByBarId(Long barId);
 
+    MenuResponseDTO drawRandomMenuItem(Long barId);
+
     void deleteMenu(Long menuId);
 }

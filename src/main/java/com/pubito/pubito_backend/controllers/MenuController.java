@@ -53,6 +53,12 @@ public class MenuController {
         return ResponseEntity.ok(updated);
     }
 
+    @GetMapping("/{barId}/roulette")
+    public ResponseEntity<MenuResponseDTO> randomItemFromMenu(@PathVariable Long barId){
+        MenuResponseDTO responseDTO = menuService.drawRandomMenuItem(barId);
+        return ResponseEntity.ok(responseDTO);
+    }
+
     @DeleteMapping("/{menuId}")
     public ResponseEntity<Void> deleteMenu(@PathVariable Long menuId) {
         menuService.deleteMenu(menuId);

@@ -1,8 +1,6 @@
 package com.pubito.pubito_backend.services.bar;
 
-import com.pubito.pubito_backend.dto.bar.BarCreateRequestDTO;
-import com.pubito.pubito_backend.dto.bar.BarResponseDTO;
-import com.pubito.pubito_backend.dto.bar.BarUpdateRequestDTO;
+import com.pubito.pubito_backend.dto.bar.*;
 
 import java.util.List;
 
@@ -16,5 +14,9 @@ public interface BarService {
 
     void deleteBarById(Long id);
 
+    List<TrendyBarResponseDTO> getTrendyBarsFromLastWeek();
+
     BarResponseDTO uptadeBar(Long id, BarUpdateRequestDTO barDTO);
+
+    List<BarMenuItemCountResponseDTO> getBarsByMenuItemsCount();
 }

@@ -1,8 +1,6 @@
 package com.pubito.pubito_backend.controllers;
 
-import com.pubito.pubito_backend.dto.bar.BarCreateRequestDTO;
-import com.pubito.pubito_backend.dto.bar.BarResponseDTO;
-import com.pubito.pubito_backend.dto.bar.BarUpdateRequestDTO;
+import com.pubito.pubito_backend.dto.bar.*;
 import com.pubito.pubito_backend.dto.menu.MenuResponseDTO;
 import com.pubito.pubito_backend.services.bar.BarService;
 import com.pubito.pubito_backend.services.menu.MenuService;
@@ -54,9 +52,21 @@ public class BarController {
         return ResponseEntity.ok(count);
     }
 
+    @GetMapping("/trendy")
+    public ResponseEntity<List<TrendyBarResponseDTO>> getTrendyBars(){
+        List<TrendyBarResponseDTO> trendyBars = barService.getTrendyBarsFromLastWeek();
+        return ResponseEntity.ok(trendyBars);
+    }
+
     @GetMapping("/{barId}/cheapest")
     public ResponseEntity<List<MenuResponseDTO>> getTop3Cheapest(@PathVariable Long barId){
         return ResponseEntity.ok(menuService.getTop3CheapestByBarId(barId));
+    }
+
+    @GetMapping("most-menu-items")
+    public ResponseEntity<List<BarMenuItemCountResponseDTO>> getBarsWithMostMenuItems(){
+        List<BarMenuItemCountResponseDTO> bars = barService.getBarsByMenuItemsCount();
+        return ResponseEntity.ok(bars);
     }
 
 

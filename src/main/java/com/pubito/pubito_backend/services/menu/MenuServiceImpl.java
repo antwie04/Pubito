@@ -77,6 +77,23 @@ public class MenuServiceImpl implements MenuService{
     }
 
     @Override
+    public MenuResponseDTO drawRandomMenuItem(Long barId) {
+        Bar bar = barRepository.findById(barId)
+                .orElseThrow(() -> new RuntimeException("bar does not exist"));
+
+        List<Menu> menuItems = menuRepository.findByBarId(barId);
+        if(menuItems.isEmpty()){
+            throw new RuntimeException("no menu items");
+        }
+
+        int randomIndex = (int)(Math.random() * menuItems.size());
+        Menu randomItem = menuItems.get(randomIndex);
+
+        return menuMapper.toDTO(randomItem);
+
+    }
+
+    @Override
     public void deleteMenu(Long menuId) {
         Menu menu = menuRepository.findById(menuId)
                 .orElseThrow(() -> new RuntimeException("Menu not found with id: " + menuId));

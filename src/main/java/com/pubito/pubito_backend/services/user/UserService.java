@@ -1,5 +1,6 @@
 package com.pubito.pubito_backend.services.user;
 
+import com.pubito.pubito_backend.dto.user.UserRankingResponseDTO;
 import com.pubito.pubito_backend.dto.user.UserRegisterRequestDTO;
 import com.pubito.pubito_backend.dto.user.UserResponseDTO;
 import com.pubito.pubito_backend.dto.user.UserUpdateRequestDTO;
@@ -23,6 +24,8 @@ public interface UserService {
     void removeRoleFromUser(Long userId, String roleName);
 
     UserResponseDTO blockUser(Long userId);
+
+    List<UserRankingResponseDTO> getUsersRankingByReviews();
 
     UserResponseDTO unblockUser(Long userId);
 

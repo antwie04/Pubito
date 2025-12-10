@@ -1,5 +1,6 @@
 package com.pubito.pubito_backend.controllers;
 
+import com.pubito.pubito_backend.dto.user.UserRankingResponseDTO;
 import com.pubito.pubito_backend.dto.user.UserRegisterRequestDTO;
 import com.pubito.pubito_backend.dto.user.UserResponseDTO;
 import com.pubito.pubito_backend.dto.user.UserUpdateRequestDTO;
@@ -65,6 +66,12 @@ public class UserController {
                                                    @PathVariable String roleName) {
         userService.removeRoleFromUser(userId, roleName);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("ranking")
+    public ResponseEntity<List<UserRankingResponseDTO>> getUsersRanking(){
+        List<UserRankingResponseDTO> rankingResponseDTO = userService.getUsersRankingByReviews();
+        return ResponseEntity.ok(rankingResponseDTO);
     }
 
     @PatchMapping("/{id}/block")
