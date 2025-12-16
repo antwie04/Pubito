@@ -33,9 +33,22 @@ public class ReviewController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @GetMapping("/bars/{barId}/reviews")
+    @GetMapping("/bars/{barId}/all-reviews")
     public ResponseEntity<List<ReviewResponseDTO>> getReviewsForBar(@PathVariable("barId") Long barId){
         List<ReviewResponseDTO> reviews = reviewService.getReviewsForBar(barId);
+        return ResponseEntity.ok(reviews);
+    }
+
+    @GetMapping("/bars/{barId}/reviews")
+    public ResponseEntity<List<ReviewResponseDTO>> getReviewsForBar(
+            @PathVariable("barId") Long barId,
+            @RequestParam(required = false) Integer stars,
+            @RequestParam(required = false) String keyword
+    ){
+        List<ReviewResponseDTO> reviews = (stars == null && (keyword == null || keyword.isBlank()))
+                ? reviewService.getReviewsForBar(barId)
+                : reviewService.getReviewsForBar(barId, stars, keyword);
+
         return ResponseEntity.ok(reviews);
     }
 

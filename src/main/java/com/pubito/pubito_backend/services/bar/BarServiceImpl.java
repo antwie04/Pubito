@@ -11,10 +11,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class BarServiceImpl implements BarService{
+public class BarServiceImpl implements BarService {
 
     private final BarRepository barRepository;
     private final BarMapper barMapper;
@@ -49,7 +50,7 @@ public class BarServiceImpl implements BarService{
 
     @Override
     public void deleteBarById(Long id) {
-        if(!barRepository.existsById(id)){
+        if (!barRepository.existsById(id)) {
             throw new RuntimeException("bar not found");
         }
         barRepository.deleteById(id);
@@ -110,11 +111,38 @@ public class BarServiceImpl implements BarService{
 
                     return new BarMenuItemCountResponseDTO(
                             bar.getId(),
-                            bar.getName(), // jeśli masz inne pole, np. getTitle(), podmień
+                            bar.getName(),
                             itemsCount
                     );
                 })
                 .filter(Objects::nonNull)
                 .toList();
+    }
+
+    @Override
+    public List<BarResponseDTO> searchBars(String city, String type, Float minAvgRate, String sortBy) {
+
+        String normalizedCity = (city != null && !city.isBlank()) ? city.toLowerCase() : null;
+
+        if ("price".equalsIgnoreCase(sortBy)) {
+            List<Object[]> rows = barRepository.findByFiltersOrderByMinMenuPrice(
+                    normalizedCity,
+                    minAvgRate
+            );
+
+            return rows.stream()
+                    .map(row -> (Bar) row[0])
+                    .map(barMapper::toDTO)
+                    .collect(Collectors.toList());
+        }
+
+        List<Bar> bars = barRepository.findByFiltersOrderByAvgRateDesc(
+                normalizedCity,
+                minAvgRate
+        );
+
+        return bars.stream()
+                .map(barMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }

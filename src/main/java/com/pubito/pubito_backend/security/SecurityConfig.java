@@ -34,9 +34,58 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
+
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**"
+                        ).permitAll()
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
+
+                        // roles
+                        .requestMatchers(HttpMethod.GET, "/roles/*/users").hasAuthority("ADMIN")
+                        .requestMatchers("/roles/**").hasAuthority("ADMIN")
+
+                        // users
+                        .requestMatchers(HttpMethod.GET, "/users").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/users/*").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/users/*").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/users/*").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/users/*").hasAuthority("ADMIN")
+
+                        // bars
+                        .requestMatchers(HttpMethod.POST, "/bars").hasAnyAuthority("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/bars/*").hasAnyAuthority("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/bars/*").hasAnyAuthority("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/bars/*").hasAnyAuthority("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/bars/**").authenticated()
+
+                        // menus
+                        .requestMatchers(HttpMethod.GET, "/bars/*/menus/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/menus/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/bars/*/menus/**").hasAnyAuthority("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/bars/*/menus/**").hasAnyAuthority("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/bars/*/menus/**").hasAnyAuthority("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/bars/*/menus/**").hasAnyAuthority("OWNER", "ADMIN")
+
+                        // reviews
+                        .requestMatchers(HttpMethod.POST, "/bars/*/reviews").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/bars/*/reviews").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/reviews/*").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/reviews/*").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/reviews/*").authenticated()
+
+                        // address
+                        .requestMatchers(HttpMethod.GET, "/address/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/address/**").hasAnyAuthority("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/address/**").hasAnyAuthority("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/address/**").hasAnyAuthority("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/address/**").hasAnyAuthority("OWNER", "ADMIN")
+
+
                         .anyRequest().authenticated()
+
                 )
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session ->

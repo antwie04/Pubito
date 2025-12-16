@@ -92,6 +92,18 @@ public class ReviewServiceImpl implements ReviewService{
     }
 
     @Override
+    public List<ReviewResponseDTO> getReviewsForBar(Long barId, Integer stars, String keyword) {
+        if (stars != null && (stars < 1 || stars > 5)) {
+            throw new IllegalArgumentException("niepoprawna liczba gwiazdek");
+        }
+
+        String normalizedKeyword = (keyword == null || keyword.trim().isEmpty()) ? null : keyword.trim();
+
+        List<Review> reviews = reviewRepository.findForBarWithFilters(barId, stars, normalizedKeyword);
+        return reviews.stream().map(reviewMapper::toDTO).toList();
+    }
+
+    @Override
     public Long countByUserId(Long userId) {
         return reviewRepository.countByUserId(userId);
     }

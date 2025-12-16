@@ -20,6 +20,8 @@ public interface ReviewService{
 
     Long countByBarId(Long barId);
 
+    List<ReviewResponseDTO> getReviewsForBar(Long barId, Integer stars, String keyword);
+
     Long countByUserId(Long userId);
 
 }

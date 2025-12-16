@@ -9,6 +9,7 @@ import com.pubito.pubito_backend.mappers.MenuMapper;
 import com.pubito.pubito_backend.repositories.BarRepository;
 import com.pubito.pubito_backend.repositories.MenuRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -90,6 +91,34 @@ public class MenuServiceImpl implements MenuService{
         Menu randomItem = menuItems.get(randomIndex);
 
         return menuMapper.toDTO(randomItem);
+
+    }
+
+    @Override
+    public List<MenuResponseDTO> getMenusForBarSorted(Long barId, String sortBy, String direction){
+        Sort.Direction sortDirection;
+
+        try {
+            sortDirection = Sort.Direction.fromString(direction);
+        } catch (IllegalArgumentException e) {
+            sortDirection = Sort.Direction.ASC;
+        }
+
+        Sort sort;
+
+        if ("category".equalsIgnoreCase(sortBy)) {
+            sort = Sort.by(sortDirection, "category").and(Sort.by(Sort.Direction.ASC, "price"));
+        } else {
+
+            sort = Sort.by(sortDirection, "price");
+        }
+
+        List<Menu> menus = menuRepository.findByBarId(barId, sort);
+
+        return menus.stream()
+                .map(menuMapper::toDTO)
+                .toList();
+
 
     }
 

@@ -69,5 +69,14 @@ public class BarController {
         return ResponseEntity.ok(bars);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<BarResponseDTO>> searchBars( @RequestParam(required = false) String city, @RequestParam(required = false) String type,
+                                                            @RequestParam(required = false) Float minAvgRate,
+                                                            @RequestParam(required = false, defaultValue = "rating") String sortBy){
+
+        List<BarResponseDTO> result = barService.searchBars(city, type, minAvgRate, sortBy);
+        return ResponseEntity.ok(result);
+    }
+
 
 }

@@ -3,6 +3,7 @@ package com.pubito.pubito_backend.repositories;
 import com.pubito.pubito_backend.entities.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -31,4 +32,21 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
                         ORDER BY review_count DESC
             """, nativeQuery = true)
     List<Object[]> getTrendyBarsLastWeek();
+
+
+    @Query("""
+        SELECT r
+        FROM Review r
+        WHERE r.bar.id = :barId
+          AND (:stars IS NULL OR r.rate = :stars)
+          AND (
+                :keyword IS NULL
+                OR (r.content IS NOT NULL AND LOWER(r.content) LIKE LOWER(CONCAT('%', :keyword, '%')))
+              )
+        ORDER BY r.createdAt DESC
+        """)
+    List<Review> findForBarWithFilters(@Param("barId") Long barId,
+                                       @Param("stars") Integer stars,
+                                       @Param("keyword") String keyword);
+
 }

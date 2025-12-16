@@ -19,6 +19,8 @@ public interface MenuService {
 
     List<MenuResponseDTO> getTop3CheapestByBarId(Long barId);
 
+    List<MenuResponseDTO> getMenusForBarSorted(Long barId, String sortBy, String direction);
+
     MenuResponseDTO drawRandomMenuItem(Long barId);
 
     void deleteMenu(Long menuId);

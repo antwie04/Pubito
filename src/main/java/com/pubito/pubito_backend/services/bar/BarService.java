@@ -19,4 +19,6 @@ public interface BarService {
     BarResponseDTO uptadeBar(Long id, BarUpdateRequestDTO barDTO);
 
     List<BarMenuItemCountResponseDTO> getBarsByMenuItemsCount();
+
+    List<BarResponseDTO> searchBars(String city, String type, Float minAvgRate, String sortBy);
 }

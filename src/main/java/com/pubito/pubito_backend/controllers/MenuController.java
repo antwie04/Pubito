@@ -59,6 +59,16 @@ public class MenuController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    @GetMapping("/bars/{barId}/menus")
+    public ResponseEntity<List<MenuResponseDTO>> getMenusForBar(
+            @PathVariable Long barId,
+            @RequestParam(defaultValue = "price") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        List<MenuResponseDTO> menus = menuService.getMenusForBarSorted(barId, direction, sortBy);
+        return ResponseEntity.ok(menus);
+    }
+
     @DeleteMapping("/{menuId}")
     public ResponseEntity<Void> deleteMenu(@PathVariable Long menuId) {
         menuService.deleteMenu(menuId);
