@@ -33,6 +33,7 @@ public class ReviewServiceImpl implements ReviewService{
         Review review = Review.builder()
                 .user(user)
                 .bar(bar)
+                .rate(dto.stars())
                 .content(dto.comment())
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -68,6 +69,7 @@ public class ReviewServiceImpl implements ReviewService{
         Bar bar = review.getBar();
 
         reviewRepository.delete(review);
+        recalcualteBarAvgRate(bar);
     }
 
     @Override

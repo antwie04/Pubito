@@ -6,8 +6,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BarRepository extends JpaRepository<Bar, Long> {
+
+    Optional<Bar> findByAddressId(@Param("addressId") Long addressId);
+
     @Query("""
             SELECT DISTINCT b
             FROM Bar b

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class MenuController {
 
 
     @PostMapping
+    @PreAuthorize("@permissionService.canModifyBar(#dto.barId())")
     public ResponseEntity<MenuResponseDTO> createMenu(@Valid @RequestBody MenuCreateRequestDTO dto) {
         MenuResponseDTO created = menuService.createMenu(dto);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
@@ -45,6 +47,7 @@ public class MenuController {
     }
 
     @PutMapping("/{menuId}")
+    @PreAuthorize("@permissionService.canModifyMenu(#menuId)")
     public ResponseEntity<MenuResponseDTO> updateMenu(
             @PathVariable Long menuId,
             @Valid @RequestBody MenuUpdateRequestDTO dto
@@ -70,6 +73,7 @@ public class MenuController {
     }
 
     @DeleteMapping("/{menuId}")
+    @PreAuthorize("@permissionService.canModifyMenu(#menuId)")
     public ResponseEntity<Void> deleteMenu(@PathVariable Long menuId) {
         menuService.deleteMenu(menuId);
         return ResponseEntity.noContent().build();

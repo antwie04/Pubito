@@ -7,6 +7,7 @@ import com.pubito.pubito_backend.services.review.ReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,6 +54,7 @@ public class ReviewController {
     }
 
     @PutMapping("/reviews/{id}")
+    @PreAuthorize("@permissionService.canModifyReview(#id)")
     public ResponseEntity<ReviewResponseDTO> updateReview(@PathVariable Long id,
                                                           @RequestParam Long userId,
                                                           @Valid @RequestBody ReviewUpdateRequestDTO dto)
@@ -62,6 +64,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/reviews/{id}")
+    @PreAuthorize("@permissionService.canModifyReview(#id)")
     ResponseEntity<Void> deleteReview(@PathVariable Long id, @RequestParam Long userId)
     {
         reviewService.deleteReviewById(id, userId);

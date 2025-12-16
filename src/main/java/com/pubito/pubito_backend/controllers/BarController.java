@@ -7,6 +7,7 @@ import com.pubito.pubito_backend.services.menu.MenuService;
 import com.pubito.pubito_backend.services.review.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,11 +37,13 @@ public class BarController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@permissionService.canModifyBar(#id)")
     public ResponseEntity<BarResponseDTO> updateBar(@PathVariable Long id, @RequestBody BarUpdateRequestDTO dto){
         return ResponseEntity.ok(barService.uptadeBar(id,dto));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@permissionService.canModifyBar(#id)")
     public ResponseEntity<Void> deleteBar(@PathVariable Long id){
         barService.deleteBarById(id);
         return ResponseEntity.noContent().build();

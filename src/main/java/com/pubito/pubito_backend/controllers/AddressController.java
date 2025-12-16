@@ -6,6 +6,7 @@ import com.pubito.pubito_backend.dto.address.AddressUpdateRequestDTO;
 import com.pubito.pubito_backend.services.address.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class AddressController {
     private final AddressService addressService;
 
     @PostMapping("/bar/{barId}")
+    @PreAuthorize("@permissionService.canModifyBar(#barId)")
     public ResponseEntity<AddressResponseDTO> createAddress(@PathVariable Long barId, @RequestBody AddressCreateRequestDTO dto){
         AddressResponseDTO responseDTO = addressService.createAddress(barId ,dto);
         return ResponseEntity.ok(responseDTO);
@@ -36,6 +38,7 @@ public class AddressController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@permissionService.canModifyAddress(#id)")
     public ResponseEntity<AddressResponseDTO> updateAddress(@PathVariable Long id, @RequestBody AddressUpdateRequestDTO dto){
         AddressResponseDTO responseDTO = addressService.updateAddress(id, dto);
         return ResponseEntity.ok(responseDTO);
@@ -43,6 +46,7 @@ public class AddressController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@permissionService.canModifyAddress(#id)")
     public ResponseEntity<Void> deleteAddress(@PathVariable Long id){
         addressService.deleteAddressById(id);
         return ResponseEntity.noContent().build();

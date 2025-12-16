@@ -2,11 +2,14 @@ package com.pubito.pubito_backend.services.bar;
 
 import com.pubito.pubito_backend.dto.bar.*;
 import com.pubito.pubito_backend.entities.Bar;
+import com.pubito.pubito_backend.entities.User;
 import com.pubito.pubito_backend.mappers.BarMapper;
 import com.pubito.pubito_backend.repositories.BarRepository;
 import com.pubito.pubito_backend.repositories.MenuRepository;
 import com.pubito.pubito_backend.repositories.ReviewRepository;
+import com.pubito.pubito_backend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,13 +24,25 @@ public class BarServiceImpl implements BarService {
     private final BarMapper barMapper;
     private final ReviewRepository reviewRepository;
     private final MenuRepository menuRepository;
+    private final UserRepository userRepository;
+
 
 
     @Override
     public BarResponseDTO createBar(BarCreateRequestDTO barDTO) {
+
+        String email = SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getName();
+
+        User owner = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         Bar bar = Bar.builder()
                 .name(barDTO.name())
                 .description(barDTO.description())
+                .owner(owner)
                 .build();
 
         barRepository.save(bar);
