@@ -37,7 +37,7 @@ public class BarServiceImpl implements BarService {
                 .getName();
 
         User owner = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("user not found"));
 
         Bar bar = Bar.builder()
                 .name(barDTO.name())

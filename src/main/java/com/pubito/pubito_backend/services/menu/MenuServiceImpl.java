@@ -61,7 +61,7 @@ public class MenuServiceImpl implements MenuService{
     @Override
     public MenuResponseDTO updateMenu(Long menuId, MenuUpdateRequestDTO dto) {
         Menu menu = menuRepository.findById(menuId)
-                .orElseThrow(() -> new RuntimeException("Menu not found with id: " + menuId));
+                .orElseThrow(() -> new RuntimeException("menu not found with id: " + menuId));
 
         menuMapper.updateEntity(menu, dto);
         Menu saved = menuRepository.save(menu);

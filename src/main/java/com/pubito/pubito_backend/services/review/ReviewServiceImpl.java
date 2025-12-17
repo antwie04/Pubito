@@ -62,7 +62,7 @@ public class ReviewServiceImpl implements ReviewService{
     public void deleteReviewById(Long id, Long userId) {
         Review review = reviewRepository.findById(id).orElseThrow(() -> new RuntimeException("review not found"));
 
-        if(!review.getUser().getId().equals(userId)){
+        if(!review.getUser().getId().equals(userId)){     //
             throw new RuntimeException("you can only delete your own review");
         }
 

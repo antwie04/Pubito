@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO registerUser(UserRegisterRequestDTO userDTO) {
 
         if (userRepository.existsByEmail(userDTO.email())) {
-            throw new RuntimeException("User with this email already exists");
+            throw new RuntimeException("user with this email already exists");
         }
 
         User user = User.builder()
@@ -67,14 +67,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserByID(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("user not found"));
         userRepository.delete(user);
     }
 
     @Override
     public UserResponseDTO updateUser(Long id, UserUpdateRequestDTO userDTO) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("user not found"));
 
         user.setEmail(userDTO.email());
         userRepository.save(user);
@@ -98,10 +98,10 @@ public class UserServiceImpl implements UserService {
     public void removeRoleFromUser(Long userId, String roleName) {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("user not found"));
 
         Role role = roleRepository.findByRoleName(roleName)
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+                .orElseThrow(() -> new RuntimeException("role not found"));
 
         user.getRoles().remove(role);
         userRepository.save(user);
