@@ -11,6 +11,7 @@ import com.pubito.pubito_backend.repositories.BarRepository;
 import com.pubito.pubito_backend.repositories.ReviewRepository;
 import com.pubito.pubito_backend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -51,11 +52,7 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     public List<ReviewResponseDTO> getReviewsForBar(Long barId) {
-        List<Review> reviews = reviewRepository.findByBarId(barId);
-
-        return reviews.stream()
-                .map(reviewMapper:: toDTO)
-                .toList();
+        return getReviewsForBar(barId, null, null, "newest");
     }
 
     @Override
@@ -95,13 +92,48 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     public List<ReviewResponseDTO> getReviewsForBar(Long barId, Integer stars, String keyword) {
+        return getReviewsForBar(barId, stars, keyword, "newest");
+    }
+
+    @Override
+    public List<ReviewResponseDTO> getReviewsForBar(Long barId, Integer stars, String keyword, String sortBy) {
         if (stars != null && (stars < 1 || stars > 5)) {
-            throw new IllegalArgumentException("niepoprawna liczba gwiazdek");
+            throw new IllegalArgumentException("Niepoprawna liczba gwiazdek");
         }
 
-        String normalizedKeyword = (keyword == null || keyword.trim().isEmpty()) ? null : keyword.trim();
+        String normalizedKeyword = (keyword == null || keyword.trim().isEmpty())
+                ? null
+                : keyword.trim();
 
-        List<Review> reviews = reviewRepository.findForBarWithFilters(barId, stars, normalizedKeyword);
+        String normalizedSort = (sortBy == null || sortBy.isBlank())
+                ? "newest"
+                : sortBy.trim().toLowerCase();
+
+        Sort sort = switch (normalizedSort) {
+            case "newest", "najnowsze" ->
+                    Sort.by(Sort.Direction.DESC, "createdAt");
+
+            case "oldest", "najstarsze" ->
+                    Sort.by(Sort.Direction.ASC, "createdAt");
+
+            case "best", "najlepsze" ->
+                    Sort.by(Sort.Direction.DESC, "rate")
+                            .and(Sort.by(Sort.Direction.DESC, "createdAt"));
+
+            case "worst", "najsłabsze", "najgorsze" ->
+                    Sort.by(Sort.Direction.ASC, "rate")
+                            .and(Sort.by(Sort.Direction.DESC, "createdAt"));
+
+            default ->
+                    throw new IllegalArgumentException(
+                            "Nieznany sort: " + sortBy + ". Dostępne: newest|oldest|best|worst"
+                    );
+        };
+
+        List<Review> reviews = (stars == null && normalizedKeyword == null)
+                ? reviewRepository.findByBarId(barId, sort)
+                : reviewRepository.findForBarWithFilters(barId, stars, normalizedKeyword, sort);
+
         return reviews.stream().map(reviewMapper::toDTO).toList();
     }
 

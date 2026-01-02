@@ -35,8 +35,11 @@ public class ReviewController {
     }
 
     @GetMapping("/bars/{barId}/all-reviews")
-    public ResponseEntity<List<ReviewResponseDTO>> getReviewsForBar(@PathVariable("barId") Long barId){
-        List<ReviewResponseDTO> reviews = reviewService.getReviewsForBar(barId);
+    public ResponseEntity<List<ReviewResponseDTO>> getReviewsForBar(@PathVariable("barId") Long barId,
+                                                                    @RequestParam(required = false) Integer stars,
+                                                                    @RequestParam(required = false) String keyword,
+                                                                    @RequestParam(required = false, defaultValue = "newest") String sortBy){
+        List<ReviewResponseDTO> reviews = reviewService.getReviewsForBar(barId, stars, keyword, sortBy);
         return ResponseEntity.ok(reviews);
     }
 

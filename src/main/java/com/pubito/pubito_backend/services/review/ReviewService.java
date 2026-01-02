@@ -14,6 +14,8 @@ public interface ReviewService{
 
     List<ReviewResponseDTO> getReviewsForBar(Long barId);
 
+    List<ReviewResponseDTO> getReviewsForBar(Long barId, Integer stars, String keyword, String sortBy);
+
     void deleteReviewById(Long id, Long userId);
 
     ReviewResponseDTO updateReview(Long id, Long userId, ReviewUpdateRequestDTO reviewDTO);
