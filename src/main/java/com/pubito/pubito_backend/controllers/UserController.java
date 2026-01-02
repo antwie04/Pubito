@@ -48,6 +48,11 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/by-email/{email}")
+    public ResponseEntity<UserResponseDTO> getUserByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(userService.getUserByEmail(email));
+    }
+
     @GetMapping("/{userId}/reviews/count")
     public ResponseEntity<Long> getReviewsCountForUser(@PathVariable Long userId){
         Long count = reviewService.countByUserId(userId);

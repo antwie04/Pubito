@@ -156,4 +156,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return userMapper.toDTO(user);
     }
+
+    @Override
+    public UserResponseDTO getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User with email " + email + " not found"));
+        return userMapper.toDTO(user);
+    }
 }

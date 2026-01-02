@@ -15,8 +15,11 @@ public class AddressMapper {
 
         return new AddressResponseDTO(
                 address.getId(),
+                address.getStreet(),
                 address.getCity(),
-                address.getGoogleMapsUrl()
+                address.getGoogleMapsUrl(),
+                address.getLatitude(),
+                address.getLongitude()
         );
     }
 

@@ -29,4 +29,5 @@ public interface UserService {
 
     UserResponseDTO unblockUser(Long userId);
 
+    UserResponseDTO getUserByEmail(String email);
 }
