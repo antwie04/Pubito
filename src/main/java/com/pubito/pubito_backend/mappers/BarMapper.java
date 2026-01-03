@@ -29,7 +29,8 @@ public class BarMapper {
                 bar.getDescription(),
                 addressDTO,
                 companyDetailsDTO,
-                (float) bar.getAvgRate()
+                (float) bar.getAvgRate(),
+                bar.getOwner().getId()
         );
     }
 

@@ -51,16 +51,16 @@ public class SecurityConfig {
 
                         // users
                         .requestMatchers(HttpMethod.GET, "/users").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/users/*").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/users/*").authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/users/*").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/users/*").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/users/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/users/**").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/users/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/users/**").hasAuthority("ADMIN")
 
                         // bars
                         .requestMatchers(HttpMethod.POST, "/bars").hasAnyAuthority("OWNER", "ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/bars/*").hasAnyAuthority("OWNER", "ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/bars/*").hasAnyAuthority("OWNER", "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/bars/*").hasAnyAuthority("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/bars/**").hasAnyAuthority("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/bars/**").hasAnyAuthority("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/bars/**").hasAnyAuthority("OWNER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/bars/**").authenticated()
 
                         // menus
@@ -74,9 +74,9 @@ public class SecurityConfig {
                         // reviews
                         .requestMatchers(HttpMethod.POST, "/bars/*/reviews").authenticated()
                         .requestMatchers(HttpMethod.GET, "/bars/*/reviews").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/reviews/*").authenticated()
-                        .requestMatchers(HttpMethod.PATCH, "/reviews/*").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/reviews/*").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/reviews/**").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/reviews/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/reviews/**").authenticated()
 
                         // address
                         .requestMatchers(HttpMethod.GET, "/address/**").authenticated()

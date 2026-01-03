@@ -21,4 +21,6 @@ public interface BarService {
     List<BarMenuItemCountResponseDTO> getBarsByMenuItemsCount();
 
     List<BarResponseDTO> searchBars(String city, String type, Float minAvgRate, String sortBy);
+
+    List<String> getCities();
 }

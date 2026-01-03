@@ -9,6 +9,7 @@ public record BarResponseDTO(
         String description,
         AddressResponseDTO address,
         CompanyDetailsResponseDTO companyDetails,
-        Float avgRate
+        Float avgRate,
+        Long ownerId
 ) {
 }

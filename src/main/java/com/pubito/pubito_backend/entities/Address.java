@@ -16,6 +16,9 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne(mappedBy = "address")
+    private Bar bar;
+
     @Column(name = "street", nullable = false)
     private String street;
 

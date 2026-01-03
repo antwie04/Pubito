@@ -18,8 +18,7 @@ public class CompanyDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bar_id", nullable = false)
+    @OneToOne(mappedBy = "companyDetails", fetch = FetchType.LAZY)
     private Bar bar;
 
     @Column(name = "website_url",columnDefinition = "TEXT")

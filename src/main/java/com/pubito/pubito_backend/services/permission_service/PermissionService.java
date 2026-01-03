@@ -49,10 +49,8 @@ public class PermissionService {
         if (isAdmin()) return true;
 
         User me = currentUser();
-        return companyDetailsRepository.findById(companyDetailsId)
-                .map(cd -> cd.getBar() != null
-                        && cd.getBar().getOwner() != null
-                        && cd.getBar().getOwner().getId().equals(me.getId()))
+        return barRepository.findByCompanyDetailsId(companyDetailsId)
+                .map(b -> b.getOwner() != null && b.getOwner().getId().equals(me.getId()))
                 .orElse(false);
     }
 

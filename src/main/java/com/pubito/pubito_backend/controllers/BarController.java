@@ -81,5 +81,10 @@ public class BarController {
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/cities")
+    public ResponseEntity<List<String>> getCities(){
+        return ResponseEntity.ok(barService.getCities());
+    }
+
 
 }

@@ -12,6 +12,11 @@ public interface BarRepository extends JpaRepository<Bar, Long> {
 
     Optional<Bar> findByAddressId(@Param("addressId") Long addressId);
 
+    Optional<Bar> findByCompanyDetailsId(Long companyDetailsId);
+
+    @Query("SELECT b FROM Bar b LEFT JOIN FETCH b.companyDetails WHERE b.id = :barId")
+    Optional<Bar> findByIdWithCompanyDetails(@Param("barId") Long barId);
+
     @Query("""
             SELECT DISTINCT b
             FROM Bar b
@@ -39,4 +44,7 @@ public interface BarRepository extends JpaRepository<Bar, Long> {
             @Param("city") String city,
             @Param("minAvgRate") Float minAvgRate
     );
+
+    @Query("SELECT DISTINCT a.city FROM Address a")
+    List<String> findDistinctCities();
 }

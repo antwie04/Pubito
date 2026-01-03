@@ -2,12 +2,10 @@ package com.pubito.pubito_backend.services.bar;
 
 import com.pubito.pubito_backend.dto.bar.*;
 import com.pubito.pubito_backend.entities.Bar;
+import com.pubito.pubito_backend.entities.CompanyDetails;
 import com.pubito.pubito_backend.entities.User;
 import com.pubito.pubito_backend.mappers.BarMapper;
-import com.pubito.pubito_backend.repositories.BarRepository;
-import com.pubito.pubito_backend.repositories.MenuRepository;
-import com.pubito.pubito_backend.repositories.ReviewRepository;
-import com.pubito.pubito_backend.repositories.UserRepository;
+import com.pubito.pubito_backend.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -25,6 +23,7 @@ public class BarServiceImpl implements BarService {
     private final ReviewRepository reviewRepository;
     private final MenuRepository menuRepository;
     private final UserRepository userRepository;
+    private final CompanyDetailsRepository companyDetailsRepository;
 
 
 
@@ -65,10 +64,16 @@ public class BarServiceImpl implements BarService {
 
     @Override
     public void deleteBarById(Long id) {
-        if (!barRepository.existsById(id)) {
-            throw new RuntimeException("bar not found");
+        Bar bar = barRepository.findByIdWithCompanyDetails(id).orElseThrow(() -> new RuntimeException("bar not found"));
+        
+        if (bar.getCompanyDetails() != null) {
+            CompanyDetails companyDetails = bar.getCompanyDetails();
+            bar.setCompanyDetails(null);
+            barRepository.save(bar);
+            companyDetailsRepository.delete(companyDetails);
         }
-        barRepository.deleteById(id);
+        
+        barRepository.delete(bar);
     }
 
     @Override
@@ -159,5 +164,10 @@ public class BarServiceImpl implements BarService {
         return bars.stream()
                 .map(barMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getCities() {
+        return barRepository.findDistinctCities();
     }
 }

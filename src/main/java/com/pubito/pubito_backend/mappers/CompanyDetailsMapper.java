@@ -15,9 +15,6 @@ public class CompanyDetailsMapper {
         }
 
         Long barId = null;
-        if (companyDetails.getBar() != null) {
-            barId = companyDetails.getBar().getId();
-        }
 
         return new CompanyDetailsResponseDTO(
                 companyDetails.getId(),
@@ -28,12 +25,11 @@ public class CompanyDetailsMapper {
     }
 
     public CompanyDetails toEntity(CompanyDetailsCreateRequestDTO dto, Bar bar) {
-        if (dto == null || bar == null) {
+        if (dto == null) {
             return null;
         }
 
         CompanyDetails companyDetails = new CompanyDetails();
-        companyDetails.setBar(bar);
         companyDetails.setWebsiteUrl(dto.websiteUrl());
         companyDetails.setPhoneNumber(dto.phoneNumber());
 
