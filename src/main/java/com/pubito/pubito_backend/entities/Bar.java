@@ -42,7 +42,8 @@ public class Bar {
     @OneToMany(mappedBy = "bar", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
-    @OneToOne(mappedBy = "bar", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "company_details_id", referencedColumnName = "id")
     private CompanyDetails companyDetails;
 
     @Column(name = "created_at", nullable = false)
