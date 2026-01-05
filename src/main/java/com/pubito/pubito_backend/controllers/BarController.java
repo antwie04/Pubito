@@ -5,6 +5,7 @@ import com.pubito.pubito_backend.dto.menu.MenuResponseDTO;
 import com.pubito.pubito_backend.services.bar.BarService;
 import com.pubito.pubito_backend.services.menu.MenuService;
 import com.pubito.pubito_backend.services.review.ReviewService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +23,7 @@ public class BarController {
     private final MenuService menuService;
 
     @PostMapping
-    public ResponseEntity<BarResponseDTO> createBar(@RequestBody BarCreateRequestDTO dto){
+    public ResponseEntity<BarResponseDTO> createBar(@Valid @RequestBody BarCreateRequestDTO dto){
         return ResponseEntity.ok(barService.createBar(dto));
     }
 
@@ -38,7 +39,7 @@ public class BarController {
 
     @PutMapping("/{id}")
     @PreAuthorize("@permissionService.canModifyBar(#id)")
-    public ResponseEntity<BarResponseDTO> updateBar(@PathVariable Long id, @RequestBody BarUpdateRequestDTO dto){
+    public ResponseEntity<BarResponseDTO> updateBar(@PathVariable Long id,@Valid @RequestBody BarUpdateRequestDTO dto){
         return ResponseEntity.ok(barService.uptadeBar(id,dto));
     }
 

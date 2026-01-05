@@ -1,14 +1,19 @@
 package com.pubito.pubito_backend.services.bar;
 
+import com.pubito.pubito_backend.dto.address.AddressCreateRequestDTO;
 import com.pubito.pubito_backend.dto.bar.*;
+import com.pubito.pubito_backend.entities.Address;
 import com.pubito.pubito_backend.entities.Bar;
 import com.pubito.pubito_backend.entities.CompanyDetails;
 import com.pubito.pubito_backend.entities.User;
+import com.pubito.pubito_backend.mappers.AddressMapper;
 import com.pubito.pubito_backend.mappers.BarMapper;
+import com.pubito.pubito_backend.mappers.CompanyDetailsMapper;
 import com.pubito.pubito_backend.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,27 +29,47 @@ public class BarServiceImpl implements BarService {
     private final MenuRepository menuRepository;
     private final UserRepository userRepository;
     private final CompanyDetailsRepository companyDetailsRepository;
+    private final AddressMapper addressMapper;
+    private final AddressRepository addressRepository;
+    private final CompanyDetailsMapper companyDetailsMapper;
 
 
 
     @Override
-    public BarResponseDTO createBar(BarCreateRequestDTO barDTO) {
+    @Transactional
+    public BarResponseDTO createBar(BarCreateRequestDTO dto) {
 
-        String email = SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getName();
-
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User owner = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("user not found"));
 
         Bar bar = Bar.builder()
-                .name(barDTO.name())
-                .description(barDTO.description())
+                .name(dto.name())
+                .description(dto.description())
                 .owner(owner)
                 .build();
 
-        barRepository.save(bar);
+        bar = barRepository.save(bar);
+
+        if (dto.address() != null) {
+            Address address = addressMapper.toEntity(dto.address(), bar);
+            bar.setAddress(address);
+
+            addressRepository.save(address);
+        }
+
+        if (dto.companyDetails() != null) {
+            CompanyDetails cd = companyDetailsMapper.toEntity(dto.companyDetails(), bar);
+
+            cd.setBar(bar);
+
+            cd = companyDetailsRepository.save(cd);
+
+            bar.setCompanyDetails(cd);
+        }
+
+        bar = barRepository.save(bar);
+
         return barMapper.toDTO(bar);
     }
 
@@ -104,13 +129,47 @@ public class BarServiceImpl implements BarService {
 
     @Override
     public BarResponseDTO uptadeBar(Long id, BarUpdateRequestDTO barDTO) {
-        Bar bar = barRepository.findById(id).orElseThrow(() -> new RuntimeException("bar not found"));
+        Bar bar = barRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("bar not found"));
 
         bar.setName(barDTO.name());
         bar.setDescription(barDTO.description());
 
-        barRepository.save(bar);
-        return barMapper.toDTO(bar);
+        if (barDTO.address() != null) {
+            if (bar.getAddress() == null) {
+                bar.setAddress(addressMapper.toEntity(
+                        new AddressCreateRequestDTO(
+                                barDTO.address().city(),
+                                barDTO.address().googleMapsUrl(),
+                                barDTO.address().street(),
+                                barDTO.address().latitude(),
+                                barDTO.address().longitude()
+                        )
+                ));
+            } else {
+                addressMapper.updateEntity(bar.getAddress(), barDTO.address());
+            }
+        }
+
+        if (barDTO.companyDetails() != null) {
+            if (bar.getCompanyDetails() == null) {
+                var cd = companyDetailsMapper.toEntity(
+                        new com.pubito.pubito_backend.dto.companydetails.CompanyDetailsCreateRequestDTO(
+                                barDTO.companyDetails().websiteUrl(),
+                                barDTO.companyDetails().phoneNumber()
+                        ),
+                        bar
+                );
+                bar.setCompanyDetails(cd);
+            } else {
+                bar.getCompanyDetails().setBar(bar);
+
+                companyDetailsMapper.updateEntity(bar.getCompanyDetails(), barDTO.companyDetails());
+            }
+        }
+
+        Bar saved = barRepository.save(bar);
+        return barMapper.toDTO(saved);
     }
 
     @Override

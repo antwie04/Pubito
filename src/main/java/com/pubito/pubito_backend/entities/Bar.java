@@ -31,7 +31,7 @@ public class Bar {
     @OneToMany(mappedBy = "bar", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Menu> menu = new ArrayList<>();
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToOne
     @JoinColumn(name = "address_id")
     private Address address;
 
@@ -42,8 +42,7 @@ public class Bar {
     @OneToMany(mappedBy = "bar", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "company_details_id")
+    @OneToOne(mappedBy = "bar", cascade = CascadeType.ALL, orphanRemoval = true)
     private CompanyDetails companyDetails;
 
     @Column(name = "created_at", nullable = false)
