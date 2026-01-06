@@ -58,8 +58,11 @@ public class ReviewServiceImpl implements ReviewService{
     @Override
     public void deleteReviewById(Long id, Long userId) {
         Review review = reviewRepository.findById(id).orElseThrow(() -> new RuntimeException("review not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("user not found"));
 
-        if(!review.getUser().getId().equals(userId)){     //
+        boolean isAdmin = user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN"));
+
+        if(!isAdmin && !review.getUser().getId().equals(userId)){
             throw new RuntimeException("you can only delete your own review");
         }
 
@@ -72,9 +75,12 @@ public class ReviewServiceImpl implements ReviewService{
     @Override
     public ReviewResponseDTO updateReview(Long id, Long userId, ReviewUpdateRequestDTO reviewDTO) {
         Review review = reviewRepository.findById(id).orElseThrow(() -> new RuntimeException("review not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("user not found"));
 
-        if(!review.getUser().getId().equals(userId)){
-            throw new RuntimeException("yuo can update only your review");
+        boolean isAdmin = user.getRoles().stream().anyMatch(role -> role.getRoleName().equals("ADMIN"));
+
+        if(!isAdmin && !review.getUser().getId().equals(userId)){
+            throw new RuntimeException("you can update only your review");
         }
 
         review.setRate(reviewDTO.stars());

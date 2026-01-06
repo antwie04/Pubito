@@ -40,7 +40,7 @@ public class JwtServiceImpl implements JwtService {
                 .setClaims(claims)
                 .setSubject(email)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 600_000))
+                .setExpiration(new Date(System.currentTimeMillis() + 1_800_000))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

@@ -7,7 +7,7 @@ import com.pubito.pubito_backend.dto.menu.MenuUpdateRequestDTO;
 import java.util.List;
 
 public interface MenuService {
-    MenuResponseDTO createMenu(MenuCreateRequestDTO dto);
+    MenuResponseDTO createMenu(Long barId, MenuCreateRequestDTO dto);
 
     MenuResponseDTO getMenuById(Long menuId);
 
