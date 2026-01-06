@@ -70,6 +70,7 @@ public class BarServiceImpl implements BarService {
 
         bar = barRepository.save(bar);
 
+
         return barMapper.toDTO(bar);
     }
 

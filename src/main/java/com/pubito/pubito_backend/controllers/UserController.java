@@ -48,7 +48,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/by-email/{email}")
+    @GetMapping("/by-email/{email:.+}")
     public ResponseEntity<UserResponseDTO> getUserByEmail(@PathVariable String email) {
         return ResponseEntity.ok(userService.getUserByEmail(email));
     }
@@ -63,6 +63,13 @@ public class UserController {
     public ResponseEntity<Void> addRoleToUser(@PathVariable Long userId,
                                               @PathVariable String roleName) {
         userService.addRoleToUser(userId, roleName);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/addRoleByEmail/{userEmail:.+}/roles/{roleName}")
+    public ResponseEntity<Void> addRoleToUserByEmail(@PathVariable String userEmail,
+                                              @PathVariable String roleName){
+        userService.addRoleToUser(userEmail, roleName);
         return ResponseEntity.noContent().build();
     }
 

@@ -95,6 +95,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void addRoleToUser(String email, String roleName){
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("user not found"));
+
+        Role role = roleRepository.findByRoleName(roleName)
+                .orElseThrow(() -> new RuntimeException("role not found"));
+
+        user.getRoles().add(role);
+        userRepository.save(user);
+    }
+
+    @Override
     public void removeRoleFromUser(Long userId, String roleName) {
 
         User user = userRepository.findById(userId)

@@ -21,6 +21,8 @@ public interface UserService {
 
     void addRoleToUser(Long userId, String roleName);
 
+    void addRoleToUser(String email, String roleName);
+
     void removeRoleFromUser(Long userId, String roleName);
 
     UserResponseDTO blockUser(Long userId);
