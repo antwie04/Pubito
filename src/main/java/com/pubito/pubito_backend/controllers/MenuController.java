@@ -15,38 +15,37 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/menu")
 public class MenuController {
 
     private final MenuService menuService;
 
 
-    @PostMapping
-    @PreAuthorize("@permissionService.canModifyBar(#dto.barId())")
-    public ResponseEntity<MenuResponseDTO> createMenu(@Valid @RequestBody MenuCreateRequestDTO dto) {
-        MenuResponseDTO created = menuService.createMenu(dto);
+    @PostMapping("/bars/{barId}/menus")
+    @PreAuthorize("@permissionService.canModifyBar(#barId)")
+    public ResponseEntity<MenuResponseDTO> createMenu(@PathVariable Long barId, @Valid @RequestBody MenuCreateRequestDTO dto) {
+        MenuResponseDTO created = menuService.createMenu(barId, dto);
         return new ResponseEntity<>(created, HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/menus")
     public ResponseEntity<List<MenuResponseDTO>> getAllMenus() {
         List<MenuResponseDTO> menus = menuService.getAllMenus();
         return ResponseEntity.ok(menus);
     }
 
-    @GetMapping("/{menuId}")
+    @GetMapping("/menus/{menuId}")
     public ResponseEntity<MenuResponseDTO> getMenuById(@PathVariable Long menuId) {
         MenuResponseDTO menu = menuService.getMenuById(menuId);
         return ResponseEntity.ok(menu);
     }
 
-    @GetMapping("/bar/{barId}")
+    @GetMapping("/bars/{barId}/menus/all")
     public ResponseEntity<List<MenuResponseDTO>> getMenusByBarId(@PathVariable Long barId) {
         List<MenuResponseDTO> menus = menuService.getMenusByBarId(barId);
         return ResponseEntity.ok(menus);
     }
 
-    @PutMapping("/{menuId}")
+    @PutMapping("/menus/{menuId}")
     @PreAuthorize("@permissionService.canModifyMenu(#menuId)")
     public ResponseEntity<MenuResponseDTO> updateMenu(
             @PathVariable Long menuId,
@@ -56,7 +55,7 @@ public class MenuController {
         return ResponseEntity.ok(updated);
     }
 
-    @GetMapping("/{barId}/roulette")
+    @GetMapping("/bars/{barId}/menus/roulette")
     public ResponseEntity<MenuResponseDTO> randomItemFromMenu(@PathVariable Long barId){
         MenuResponseDTO responseDTO = menuService.drawRandomMenuItem(barId);
         return ResponseEntity.ok(responseDTO);
@@ -72,7 +71,7 @@ public class MenuController {
         return ResponseEntity.ok(menus);
     }
 
-    @DeleteMapping("/{menuId}")
+    @DeleteMapping("/menus/{menuId}")
     @PreAuthorize("@permissionService.canModifyMenu(#menuId)")
     public ResponseEntity<Void> deleteMenu(@PathVariable Long menuId) {
         menuService.deleteMenu(menuId);

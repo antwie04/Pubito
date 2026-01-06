@@ -88,13 +88,19 @@ public class BarServiceImpl implements BarService {
     }
 
     @Override
+    @Transactional
     public void deleteBarById(Long id) {
-        Bar bar = barRepository.findByIdWithCompanyDetails(id).orElseThrow(() -> new RuntimeException("bar not found"));
-        
+        Bar bar = barRepository.findById(id).orElseThrow(() -> new RuntimeException("bar not found"));
+
+        if (bar.getAddress() != null) {
+            Address address = bar.getAddress();
+            bar.setAddress(null);
+            addressRepository.delete(address);
+        }
+
         if (bar.getCompanyDetails() != null) {
             CompanyDetails companyDetails = bar.getCompanyDetails();
             bar.setCompanyDetails(null);
-            barRepository.save(bar);
             companyDetailsRepository.delete(companyDetails);
         }
         
@@ -128,6 +134,7 @@ public class BarServiceImpl implements BarService {
     }
 
     @Override
+    @Transactional
     public BarResponseDTO uptadeBar(Long id, BarUpdateRequestDTO barDTO) {
         Bar bar = barRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("bar not found"));

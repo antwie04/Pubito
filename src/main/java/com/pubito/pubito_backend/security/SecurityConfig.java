@@ -64,12 +64,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/bars/**").authenticated()
 
                         // menus
-                        .requestMatchers(HttpMethod.GET, "/bars/*/menus/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/menus/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/bars/*/menus/**").hasAnyAuthority("OWNER", "ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/bars/*/menus/**").hasAnyAuthority("OWNER", "ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/bars/*/menus/**").hasAnyAuthority("OWNER", "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/bars/*/menus/**").hasAnyAuthority("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/bars/{barId}/menus").hasAnyAuthority("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/menus/**").hasAnyAuthority("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/menus/**").hasAnyAuthority("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/bars/{barId}/menus/**").authenticated()
 
                         // reviews
                         .requestMatchers(HttpMethod.POST, "/bars/*/reviews").authenticated()

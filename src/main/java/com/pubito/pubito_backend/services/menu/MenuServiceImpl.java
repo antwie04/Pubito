@@ -23,9 +23,9 @@ public class MenuServiceImpl implements MenuService{
     private final MenuMapper menuMapper;
 
     @Override
-    public MenuResponseDTO createMenu(MenuCreateRequestDTO dto) {
-        Bar bar = barRepository.findById(dto.barId())
-                .orElseThrow(() -> new RuntimeException("bar not found" + dto.barId()));
+    public MenuResponseDTO createMenu(Long barId, MenuCreateRequestDTO dto) {
+        Bar bar = barRepository.findById(barId)
+                .orElseThrow(() -> new RuntimeException("bar not found" + barId));
 
         Menu menu = menuMapper.toEntity(dto, bar);
         Menu saved = menuRepository.save(menu);

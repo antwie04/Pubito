@@ -17,7 +17,6 @@ public record MenuCreateRequestDTO(
         @NotNull
         @Positive
         BigDecimal price,
-        String imgUrl,
-        Long barId
+        String imgUrl
 ) {
 }
