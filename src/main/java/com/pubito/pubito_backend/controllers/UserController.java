@@ -97,4 +97,5 @@ public class UserController {
         userService.unblockUser(id);
         return ResponseEntity.ok(userService.unblockUser(id));
     }
+
 }
