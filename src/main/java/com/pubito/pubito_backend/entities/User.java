@@ -8,6 +8,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
 @Builder
 @Getter
 @Setter
@@ -51,4 +52,5 @@ public class User {
     public void prePersist() {
         createdAt = LocalDateTime.now();
     }
+
 }
