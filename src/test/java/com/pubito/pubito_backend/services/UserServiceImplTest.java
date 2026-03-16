@@ -91,4 +91,24 @@ public class UserServiceImplTest {
         assertEquals("user with this email already exists", ex.getMessage());
         verify(userRepository, never()).save(any());
     }
+
+    @Test
+    void shouldBlockUser() {
+        Long userId =1L;
+
+        User user = User.builder()
+                .id(userId)
+                .email("test@pubito.pl")
+                .password("haslo")
+                .nickname("user")
+                .isActive(true)
+                .build();
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        userService.blockUser(userId);
+
+        assertFalse(user.isActive());
+        verify(userRepository).save(user);
+    }
 }
