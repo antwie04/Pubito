@@ -111,4 +111,38 @@ public class UserServiceImplTest {
         assertFalse(user.isActive());
         verify(userRepository).save(user);
     }
+
+    @Test
+    void shouldGetUserById(){
+        Long userId = 1L;
+
+        User user = User.builder()
+                .id(userId)
+                .email("test@pubito.pl")
+                .password("secret")
+                .nickname("Antoni")
+                .isActive(true)
+                .build();
+
+        UserResponseDTO dto = new UserResponseDTO(
+                userId,
+                "test@pubito.pl",
+                "Antoni",
+                true,
+                List.of()
+        );
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userMapper.toDTO(user)).thenReturn(dto);
+
+        UserResponseDTO result = userService.getUserById(userId);
+
+        assertEquals(userId, result.id());
+        assertEquals("test@pubito.pl", result.email());
+
+        verify(userRepository).findById(userId);
+        verify(userMapper).toDTO(user);
+
+
+    }
 }
