@@ -23,4 +23,6 @@ public interface BarService {
     List<BarResponseDTO> searchBars(String city, String type, Float minAvgRate, String sortBy);
 
     List<String> getCities();
+
+    void test();
 }

@@ -237,4 +237,9 @@ public class BarServiceImpl implements BarService {
     public List<String> getCities() {
         return barRepository.findDistinctCities();
     }
+
+    @Override
+    public void test() {
+
+    }
 }
