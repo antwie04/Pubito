@@ -1,8 +1,13 @@
 package com.pubito.pubito_backend.mappers;
 
+import com.pubito.pubito_backend.dto.review.ReviewCreateRequestDTO;
 import com.pubito.pubito_backend.dto.review.ReviewResponseDTO;
+import com.pubito.pubito_backend.entities.Bar;
 import com.pubito.pubito_backend.entities.Review;
+import com.pubito.pubito_backend.entities.User;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 @Component
 public class ReviewMapper {
@@ -23,5 +28,20 @@ public class ReviewMapper {
                 userId,
                 review.getCreatedAt()
         );
+    }
+
+
+    public Review toEntity(ReviewCreateRequestDTO dto, User user, Bar bar) {
+        if (dto == null) {
+            return null;
+        }
+
+        return Review.builder()
+                .user(user)
+                .bar(bar)
+                .rate(dto.stars())
+                .content(dto.comment())
+                .createdAt(LocalDateTime.now())
+                .build();
     }
 }

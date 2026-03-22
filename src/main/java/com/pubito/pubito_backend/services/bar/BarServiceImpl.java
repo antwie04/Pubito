@@ -238,8 +238,4 @@ public class BarServiceImpl implements BarService {
         return barRepository.findDistinctCities();
     }
 
-    @Override
-    public void test() {
-
-    }
 }

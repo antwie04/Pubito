@@ -24,5 +24,4 @@ public interface BarService {
 
     List<String> getCities();
 
-    void test();
 }
