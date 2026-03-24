@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class ReviewServiceImplTest {
@@ -109,6 +109,89 @@ public class ReviewServiceImplTest {
 
         verify(reviewRepository).save(any(Review.class));
         verify(barRepository).save(bar);
+    }
+
+    @Test
+    void shouldDeleteReviewByAuthor(){
+        Long userId = 1L;
+        Long reviewId = 1L;
+
+        User user = User.builder()
+                .id(userId)
+                .email("user@test.pl")
+                .isActive(true)
+                .nickname("ussr")
+                .password("password")
+                .build();
+
+        Bar bar = Bar.builder()
+                .id(3L)
+                .name("pub")
+                .avgRate(4.0f)
+                .owner(user)
+                .build();
+
+        Review review = Review.builder()
+                .id(reviewId)
+                .user(user)
+                .bar(bar)
+                .rate(5)
+                .content("great bar")
+                .build();
+
+        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(reviewRepository.findByBarId(bar.getId())).thenReturn(List.of());
+
+        reviewService.deleteReviewById(reviewId, userId);
+
+        verify(reviewRepository).delete(review);
+        verify(barRepository).save(bar);
+
+    }
+
+    @Test
+    void shouldThrowWhenDeletingReviewByNotTheAuthor(){
+
+        Long reviewId = 1L;
+
+        User author = User.builder()
+                .id(3L)
+                .email("user@test.pl")
+                .isActive(true)
+                .nickname("ussr")
+                .password("password")
+                .build();
+
+        User nonAuthor = User.builder()
+                .id(5L)
+                .email("user@test.pl")
+                .isActive(true)
+                .nickname("ussr")
+                .password("password")
+                .build();
+
+        Bar bar = Bar.builder()
+                .id(3L)
+                .name("pub")
+                .avgRate(4.0f)
+                .owner(author)
+                .build();
+
+        Review review = Review.builder()
+                .id(reviewId)
+                .user(author)
+                .bar(bar)
+                .rate(5)
+                .content("great bar")
+                .build();
+
+        when(reviewRepository.findById(reviewId)).thenReturn(Optional.of(review));
+        when(userRepository.findById(nonAuthor.getId())).thenReturn(Optional.of(nonAuthor));
+
+        assertThrows(RuntimeException.class ,() -> reviewService.deleteReviewById(reviewId, nonAuthor.getId()));
+        verify(reviewRepository, never()).delete(any());
+
     }
 
 
