@@ -2,6 +2,7 @@ package com.pubito.pubito_backend.services;
 
 import com.pubito.pubito_backend.dto.review.ReviewCreateRequestDTO;
 import com.pubito.pubito_backend.dto.review.ReviewResponseDTO;
+import com.pubito.pubito_backend.dto.review.ReviewUpdateRequestDTO;
 import com.pubito.pubito_backend.entities.Bar;
 import com.pubito.pubito_backend.entities.Review;
 import com.pubito.pubito_backend.entities.User;
@@ -194,6 +195,20 @@ public class ReviewServiceImplTest {
 
     }
 
+    @Test
+    void shouldThrowReviewNotFound(){
+        Long reviewId = 10L;
+        Long userId = 1L;
+
+        when(reviewRepository.findById(reviewId)).thenReturn(Optional.empty());
+
+        RuntimeException ex = assertThrows(
+                RuntimeException.class, () -> reviewService.updateReview(reviewId, userId,
+                        new ReviewUpdateRequestDTO(5, "great bar"))
+        );
+        assertEquals("review not found", ex.getMessage());
+
+    }
 
 }
 
