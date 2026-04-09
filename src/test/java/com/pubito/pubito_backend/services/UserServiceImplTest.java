@@ -145,4 +145,34 @@ public class UserServiceImplTest {
 
 
     }
+
+    @Test
+    void shouldDeleteUserByEmail(){
+        String email = "test@pubito.pl";
+
+        User user = User.builder()
+                .id(1L)
+                .email(email)
+                .password("secret")
+                .nickname("Antoni")
+                .isActive(true)
+                .build();
+
+        UserResponseDTO dto = new UserResponseDTO(
+                1L,
+                email,
+                "Antoni",
+                true,
+                List.of()
+        );
+
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        when(userMapper.toDTO(user)).thenReturn(dto);
+
+        UserResponseDTO result = userService.getUserByEmail(email);
+
+        assertEquals(email, result.email());
+        verify(userRepository).findByEmail(email);
+        verify(userMapper).toDTO(user);
+    }
 }
