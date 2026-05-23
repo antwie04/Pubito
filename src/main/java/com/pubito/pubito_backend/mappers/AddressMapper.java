@@ -25,9 +25,7 @@ public class AddressMapper {
         );
     }
 
-    /**
-     * Mapuje tylko pola (bez relacji).
-     */
+
     public Address toEntity(AddressCreateRequestDTO dto) {
         if (dto == null) {
             return null;
@@ -42,9 +40,7 @@ public class AddressMapper {
         return address;
     }
 
-    /**
-     * Mapuje pola + ustawia relację do baru (żeby addresses.bar_id nie był NULL).
-     */
+
     public Address toEntity(AddressCreateRequestDTO dto, Bar bar) {
         Address address = toEntity(dto);
         if (address != null) {
@@ -53,9 +49,7 @@ public class AddressMapper {
         return address;
     }
 
-    /**
-     * Update pól (bez ruszania relacji bar).
-     */
+
     public void updateEntity(Address address, AddressUpdateRequestDTO dto) {
         if (address == null || dto == null) {
             return;
@@ -66,6 +60,6 @@ public class AddressMapper {
         address.setStreet(dto.street());
         address.setLatitude(dto.latitude());
         address.setLongitude(dto.longitude());
-        // NIE DOTYKAJ address.setBar(...)
+
     }
 }
